@@ -388,6 +388,128 @@ img {
   position:relative;
   z-index:1;
 }
+
+/* ===== 加载页面美化增强 ===== */
+/* 装饰性四角线条 */
+.loading-corner{
+  position:absolute;
+  width:80px;
+  height:80px;
+  border:3px solid rgba(var(--primary-color-rgb),0.6);
+  z-index:2;
+  pointer-events:none;
+}
+.loading-corner-tl{top:40px;left:40px;border-right:none;border-bottom:none;}
+.loading-corner-tr{top:40px;right:40px;border-left:none;border-bottom:none;}
+.loading-corner-bl{bottom:40px;left:40px;border-right:none;border-top:none;}
+.loading-corner-br{bottom:40px;right:40px;border-left:none;border-top:none;}
+
+/* 环形加载动画容器 */
+.loading-spinner-container{
+  position:relative;
+  width:100px;
+  height:100px;
+  margin-bottom:40px;
+  z-index:2;
+}
+/* 环形背景 */
+.loading-spinner-bg{
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  border:6px solid rgba(var(--primary-color-rgb),0.2);
+  border-radius:50%;
+}
+/* 环形进度（旋转动画） */
+.loading-spinner{
+  position:absolute;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  border:6px solid transparent;
+  border-top-color:var(--primary-color);
+  border-right-color:var(--primary-color-light);
+  border-radius:50%;
+  animation:spin 1.2s linear infinite;
+  box-shadow:0 0 20px rgba(var(--primary-color-rgb),0.4);
+}
+@keyframes spin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+/* 环形中心光点 */
+.loading-spinner-center{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:20px;
+  height:20px;
+  background:radial-gradient(circle,var(--primary-color-light) 0%,var(--primary-color) 100%);
+  border-radius:50%;
+  box-shadow:0 0 15px rgba(var(--primary-color-rgb),0.8);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1;}
+  50%{transform:translate(-50%,-50%) scale(1.3);opacity:0.7;}
+}
+
+/* 进度条末端光点 */
+.loading-bar-fill::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  right:-8px;
+  transform:translateY(-50%);
+  width:20px;
+  height:20px;
+  background:radial-gradient(circle,#fff 0%,var(--primary-color-light) 40%,transparent 70%);
+  border-radius:50%;
+  box-shadow:0 0 20px var(--primary-color-light),0 0 40px var(--primary-color);
+  animation:glowDot 1s ease-in-out infinite;
+}
+@keyframes glowDot{
+  0%,100%{opacity:1;transform:translateY(-50%) scale(1);}
+  50%{opacity:0.7;transform:translateY(-50%) scale(1.2);}
+}
+
+/* 进度条流光效果 */
+.loading-bar-fill{
+  overflow:hidden;
+}
+.loading-bar-shine{
+  position:absolute;
+  top:0;left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.4) 50%,transparent 100%);
+  animation:shine 2s ease-in-out infinite;
+}
+@keyframes shine{
+  0%{left:-100%;}
+  100%{left:100%;}
+}
+
+/* 加载阶段文字渐入动画 */
+.loading-stage{
+  animation:fadeInUp 0.5s ease-out;
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* 加载页面装饰横线 */
+.loading-divider{
+  width:300px;
+  height:2px;
+  background:linear-gradient(90deg,transparent 0%,rgba(var(--primary-color-rgb),0.6) 50%,transparent 100%);
+  margin:20px 0;
+  z-index:2;
+  position:relative;
+}
+
 /* ============================================ */
 
 </style>
@@ -398,10 +520,24 @@ img {
 <div id="loadingOverlay">
   <div id="loadingStage">
     <div class="loading-bg"></div>
+    <!-- 装饰性四角线条 -->
+    <div class="loading-corner loading-corner-tl"></div>
+    <div class="loading-corner loading-corner-tr"></div>
+    <div class="loading-corner loading-corner-bl"></div>
+    <div class="loading-corner loading-corner-br"></div>
+    <!-- 环形加载动画 -->
+    <div class="loading-spinner-container">
+      <div class="loading-spinner-bg"></div>
+      <div class="loading-spinner"></div>
+      <div class="loading-spinner-center"></div>
+    </div>
+    <div class="loading-divider"></div>
     <div class="loading-logo">神兵匣夺宝</div>
     <div class="loading-stage" id="loadingStageText">正在初始化···</div>
     <div class="loading-bar-container">
-      <div class="loading-bar-fill" id="loadingBarFill"></div>
+      <div class="loading-bar-fill" id="loadingBarFill">
+        <div class="loading-bar-shine"></div>
+      </div>
     </div>
     <div class="loading-percent" id="loadingPercent">0%</div>
     <div class="loading-tip">首次打开需要加载时间，请耐心等待</div>
