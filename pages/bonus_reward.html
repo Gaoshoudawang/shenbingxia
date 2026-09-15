@@ -227,7 +227,7 @@ var currentReward = null;
 // 显示奖励（完全复刻buy_success.html的setBuyReward处理逻辑）
 function showReward(item){
   currentReward = item;
-  playRewardSound(); // 播放恭喜获得页面音效
+  // playRewardSound(); // 播放恭喜获得页面音效 // 已移到主页面播放，避免重音
   // 显示奖励
   slotsContainer.innerHTML = '';
   var slot = createSlot(singlePosition.x, singlePosition.y, item);
@@ -263,7 +263,7 @@ window.addEventListener('message', function(e){
 
 // 页面加载完成后播放恭喜获得页面音效（和buy_success.html完全一样）
 window.onload = function(){
-  playRewardSound(); // 播放恭喜获得页面音效
+  // playRewardSound(); // 播放恭喜获得页面音效 // 已移到主页面播放，避免重音
 };
 </script>
 
