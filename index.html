@@ -1231,6 +1231,10 @@ function preloadKeyPages() {
     'pages/bonus_tip.html',
     'pages/confirm.html'
   ];
+  // 方案A：预加载的iframe保留在DOM中，不移除
+  // 用一个全局对象保存预加载的iframe，方便后续复用
+  window._preloadedIframes = window._preloadedIframes || {};
+  
   keyPages.forEach(function(path) {
     try {
       var iframe = document.createElement('iframe');
@@ -1239,14 +1243,21 @@ function preloadKeyPages() {
       iframe.style.width = '0';
       iframe.style.height = '0';
       iframe.style.border = 'none';
-      // 关键：静音iframe，防止预加载时播放音效导致重音
+      iframe.style.position = 'absolute';
+      iframe.style.left = '-9999px';
+      iframe.style.top = '-9999px';
       iframe.setAttribute('muted', '');
       iframe.setAttribute('volume', '0');
+      iframe.setAttribute('data-preloaded', 'true');
+      iframe.setAttribute('data-page', path);
       document.body.appendChild(iframe);
-      // 加载完成后立即静音所有音频，然后移除iframe
+      
+      // 保存到全局对象
+      window._preloadedIframes[path] = iframe;
+      
+      // 加载完成后立即静音所有音频，但不移除iframe
       iframe.onload = function() {
         try {
-          // 静音iframe中的所有音频
           var audios = iframe.contentDocument.querySelectorAll('audio');
           audios.forEach(function(audio) {
             audio.muted = true;
@@ -1254,11 +1265,8 @@ function preloadKeyPages() {
             audio.pause();
           });
         } catch(e) {}
-        setTimeout(function() {
-          if (iframe.parentNode) {
-            iframe.parentNode.removeChild(iframe);
-          }
-        }, 500);
+        // 方案A：不移除iframe，保留在DOM中
+        // iframe会一直隐藏着，真正打开页面时可以直接复用
       };
     } catch(e) {}
   });
