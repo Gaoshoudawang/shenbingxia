@@ -1239,14 +1239,26 @@ function preloadKeyPages() {
       iframe.style.width = '0';
       iframe.style.height = '0';
       iframe.style.border = 'none';
+      // 关键：静音iframe，防止预加载时播放音效导致重音
+      iframe.setAttribute('muted', '');
+      iframe.setAttribute('volume', '0');
       document.body.appendChild(iframe);
-      // 加载完成后移除iframe（保留缓存）
+      // 加载完成后立即静音所有音频，然后移除iframe
       iframe.onload = function() {
+        try {
+          // 静音iframe中的所有音频
+          var audios = iframe.contentDocument.querySelectorAll('audio');
+          audios.forEach(function(audio) {
+            audio.muted = true;
+            audio.volume = 0;
+            audio.pause();
+          });
+        } catch(e) {}
         setTimeout(function() {
           if (iframe.parentNode) {
             iframe.parentNode.removeChild(iframe);
           }
-        }, 1000);
+        }, 500);
       };
     } catch(e) {}
   });
