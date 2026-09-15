@@ -1203,6 +1203,56 @@ var PRELOAD_RESOURCES = [
   'images/items_box/闪光弹-星核耀光/small.png'
 ];
 
+
+// ===== 优化：强制解码图片 + 预加载关键子页面 =====
+// 强制解码图片（用canvas绘制，确保图片解码完成）
+function forceDecodeImage(img) {
+  return new Promise(function(resolve) {
+    try {
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      canvas.width = img.naturalWidth || img.width || 1;
+      canvas.height = img.naturalHeight || img.height || 1;
+      ctx.drawImage(img, 0, 0);
+    } catch(e) {}
+    resolve();
+  });
+}
+
+// 预加载关键子页面（隐藏的iframe，提前加载HTML和JS）
+function preloadKeyPages() {
+  var keyPages = [
+    'pages/gacha_single.html',
+    'pages/gacha_ten.html',
+    'pages/storage.html',
+    'pages/warehouse.html',
+    'pages/exchange.html',
+    'pages/buy_confirm.html',
+    'pages/bonus_tip.html',
+    'pages/confirm.html'
+  ];
+  keyPages.forEach(function(path) {
+    try {
+      var iframe = document.createElement('iframe');
+      iframe.src = path;
+      iframe.style.display = 'none';
+      iframe.style.width = '0';
+      iframe.style.height = '0';
+      iframe.style.border = 'none';
+      document.body.appendChild(iframe);
+      // 加载完成后移除iframe（保留缓存）
+      iframe.onload = function() {
+        setTimeout(function() {
+          if (iframe.parentNode) {
+            iframe.parentNode.removeChild(iframe);
+          }
+        }, 1000);
+      };
+    } catch(e) {}
+  });
+}
+// ===== 优化结束 =====
+
 var preloadLoadedCount = 0;
 var preloadTotalCount = PRELOAD_RESOURCES.length;
 var preloadFinished = false;
@@ -1240,6 +1290,9 @@ function onPreloadResourceLoaded(path) {
 }
 
 // 开始预加载
+// 预加载关键子页面
+preloadKeyPages();
+
 PRELOAD_RESOURCES.forEach(function(path) {
   var ext = path.split('.').pop().toLowerCase();
   if (ext === 'm4a' || ext === 'mp3' || ext === 'wav' || ext === 'ogg' || ext === 'aac' || ext === 'flac') {
@@ -1249,8 +1302,13 @@ PRELOAD_RESOURCES.forEach(function(path) {
     audio.onerror = function() { console.warn('预加载失败:', path); onPreloadResourceLoaded(path); };
     audio.src = path;
   } else {
-    var img = new Image();
-    img.onload = function() { onPreloadResourceLoaded(path); };
+        var img = new Image();
+    img.onload = function() { 
+      // 强制解码图片，确保显示时不需要再解码
+      forceDecodeImage(img).then(function() {
+        onPreloadResourceLoaded(path);
+      });
+    };
     img.onerror = function() { console.warn('预加载失败:', path); onPreloadResourceLoaded(path); };
     img.src = path;
   }
