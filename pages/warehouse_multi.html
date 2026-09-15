@@ -709,7 +709,7 @@ window.onload = function(){
 // 监听父页面的消息，接收道具列表
 window.addEventListener('message', function(e){
   if(e.data && e.data.type === 'setWarehouseItems'){
-  playRewardSound(); // 播放恭喜获得页面音效
+  // playRewardSound(); // 已移到主页面播放，避免重音
     warehouseItems = e.data.items || [];
     // 接收到道具列表后，播放十连抽动画
     if(warehouseItems.length === 1) playSingle(); else playTen();
