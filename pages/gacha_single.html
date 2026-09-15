@@ -761,6 +761,13 @@ window.addEventListener('message', function(e){
 });
 
 window.onload = function(){
+  // 检查是否是预加载模式，如果是则不自动抽奖
+  var urlParams = new URLSearchParams(window.location.search);
+  var isPreload = urlParams.get('preload') === '1';
+  if(isPreload){
+    console.log('[预加载模式] gacha_single 不自动抽奖');
+    return;
+  }
   // 延迟100ms，如果还没收到setBuyReward消息，就认为是普通抽奖，自己随机生成道具
   setTimeout(function(){
     if(!rewardReady && !指定Item){

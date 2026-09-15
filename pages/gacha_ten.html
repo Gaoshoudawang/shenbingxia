@@ -772,6 +772,13 @@ document.getElementById('confirmBtn').addEventListener('click', function(){
 
 // 十连抽页面，直接播放十连抽动画
 window.onload = function(){
+  // 检查是否是预加载模式，如果是则不自动抽奖
+  var urlParams = new URLSearchParams(window.location.search);
+  var isPreload = urlParams.get('preload') === '1';
+  if(isPreload){
+    console.log('[预加载模式] gacha_ten 不自动抽奖');
+    return;
+  }
   playTen();
 };
 </script>
