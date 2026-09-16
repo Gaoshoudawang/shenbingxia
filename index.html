@@ -1205,6 +1205,15 @@ function closeBuySuccess(){
 </div>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
+  // ===== 刷新兜底：强制关闭所有modal，避免刷新时黑屏 =====
+  var allModals = document.querySelectorAll('[class*="-modal"]');
+  allModals.forEach(function(modal){
+    modal.style.display = 'none';
+  });
+  // 同时强制隐藏加载页面（兜底）
+  var loadingOverlay = document.getElementById('loadingOverlay');
+  if(loadingOverlay) loadingOverlay.style.display = 'none';
+  
   // ===== 动态生成操作指南和免责声明 =====
   if(typeof SIMULATOR_CONFIG !== 'undefined'){
     var guideTitle = document.getElementById('guideTitle');
@@ -1432,16 +1441,12 @@ function onPreloadResourceLoaded(path) {
     if (typeof updateLoading === 'function') {
       updateLoading(100, '加载完成！');
     }
-    // 延迟500ms后隐藏加载页面
-    setTimeout(function() {
-      var loadingOverlay = document.getElementById('loadingOverlay');
-      if (loadingOverlay) {
-        loadingOverlay.classList.add('hidden');
-        setTimeout(function() {
-          if (loadingOverlay) loadingOverlay.style.display = 'none';
-        }, 500);
-      }
-    }, 500);
+    // 立即隐藏加载页面（避免setTimeout被打断导致黑屏）
+    var loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+      loadingOverlay.classList.add('hidden');
+      loadingOverlay.style.display = 'none';
+    }
   }
 }
 
