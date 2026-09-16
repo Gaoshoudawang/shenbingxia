@@ -301,9 +301,9 @@ window.addEventListener('resize', layout);
 layout();
 
 // 从URL参数获取道具信息
-const urlParams = new URLSearchParams(window.location.search);
-let itemName = urlParams.get('name') || 'AK47-雷暴';
-const itemImage = urlParams.get('image') || '';
+const urlParams2 = new URLSearchParams(window.location.search);
+let itemName = urlParams2.get('name') || 'AK47-雷暴';
+const itemImage = urlParams2.get('image') || '';
 
 // 设置武器图片和道具名称
 if (itemImage) {
