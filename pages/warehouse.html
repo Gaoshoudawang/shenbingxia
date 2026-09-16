@@ -24,6 +24,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .item-slot .slot-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
 .item-slot .item-img{position:absolute;inset:15px;width:calc(100% - 30px);height:calc(100% - 30px);object-fit:contain;display:block;z-index:2}
 .item-slot .item-name{position:absolute;left:5px;top:20px;right:auto;text-align:left;font-size:30px;font-weight:bold;color:#ddd;text-shadow:0 2px 6px rgba(0,0,0,0.95),0 0 10px rgba(0,0,0,0.8);z-index:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%}
+.item-slot .showcase-icon{position:absolute;top:5px;left:5px;width:36px;height:36px;object-fit:contain;z-index:5;filter:drop-shadow(0 0 4px rgba(255,215,0,0.8))}
 .item-slot .item-count{position:absolute;right:30%;bottom:30%;color:#fff;font-size:22px;font-weight:bold;text-shadow:0 0 5px rgba(0,0,0,0.9);z-index:4}
 /* 底部按钮区域 */
 .bottom-bar{position:absolute;bottom:0;left:0;right:0;height:140px;z-index:20}
@@ -153,6 +154,14 @@ function renderWarehouse(){
     }
     itemImg.src = smallImgSrc;
     slot.appendChild(itemImg);
+    
+    // 有出货动画的道具，添加v标
+    if(window.ITEM_BOX_CONFIG && window.ITEM_BOX_CONFIG[item.name] && window.ITEM_BOX_CONFIG[item.name].has_showcase){
+      var showcaseIcon = document.createElement('img');
+      showcaseIcon.className = 'showcase-icon';
+      showcaseIcon.src = '../images/common/showcase_icon.png';
+      slot.appendChild(showcaseIcon);
+    }
     
     var itemName = document.createElement('div');
     itemName.className = 'item-name';
