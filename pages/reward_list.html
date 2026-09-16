@@ -9,6 +9,7 @@
 <script src="../data/gacha_base.js"></script>
   <script src="../data/item_base_name_map.js"></script>
   <script src="../data/bonus_extra.js"></script>
+  <script src="../data/item_box_config.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#000}
@@ -30,7 +31,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000}
 .item-slot{position:relative;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
 .item-slot .slot-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
 .item-slot .item-img{position:absolute;inset:15px;width:calc(100% - 30px);height:calc(100% - 30px);object-fit:contain;display:block;z-index:2;pointer-events:none}
-.item-slot .item-name{position:absolute;left:-40px;right:-40px;top:105%;text-align:center;font-size:28px;font-weight:bold;color:#111;text-shadow:0 2px 8px rgba(0,0,0,0.8);z-index:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-slot .item-name{position:absolute;left:-40px;right:-40px;top:105%;text-align:center;font-size:30px;font-weight:bold;color:#ddd;text-shadow:0 2px 6px rgba(0,0,0,0.95),0 0 10px rgba(0,0,0,0.8);z-index:3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;justify-content:center;gap:8px}
+.item-slot .item-name .showcase-icon{width:30px;height:30px;object-fit:contain;flex-shrink:0}
 .item-slot .item-prob{position:absolute;left:-40px;right:-40px;top:calc(105% + 36px);text-align:center;font-size:24px;font-weight:bold;z-index:3}
 .item-slot .item-prob .prob-label{color:#ffd700;text-shadow:0 0 5px rgba(0,0,0,0.9)}
 .item-slot .item-prob .prob-value{color:#000;text-shadow:0 0 3px #fff,0 0 6px #fff}
@@ -171,10 +173,22 @@ function renderRewardList(){
         }
       }
       
+      // 判断是否有出货动画
+      var hasShowcase = false;
+      if(window.ITEM_BOX_CONFIG && window.ITEM_BOX_CONFIG[itemName]){
+        hasShowcase = window.ITEM_BOX_CONFIG[itemName].has_showcase || false;
+      }
+      var nameHtml = '';
+      if(hasShowcase){
+        nameHtml = '<img class="showcase-icon" src="../images/common/showcase_icon.png">' + itemName;
+      }else{
+        nameHtml = itemName;
+      }
+      
       html += '<div class="item-slot quality-gold">';
       html += '<img class="slot-bg" src="../images/common/slot/gold.png">';
       html += '<img class="item-img" src="' + itemImg + '">';
-      html += '<div class="item-name">' + itemName + '</div>';
+      html += '<div class="item-name">' + nameHtml + '</div>';
       html += '<div class="item-prob"><span class="prob-label">概率：</span><span class="prob-value">' + probText + '</span></div>';
       html += '</div>';
     }
