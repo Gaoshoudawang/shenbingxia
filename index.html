@@ -322,23 +322,10 @@ img {
   }
 }
 /* 加载阶段文字 */
-.loading-stage-row{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:30px;
-  margin-bottom:90px;
-}
-.loading-bar-row{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:30px;
-  margin-bottom:40px;
-}
 .loading-stage{
   font-size:84px;
   color:var(--primary-color);
+  margin-bottom:90px;
   min-height:120px;
   position:relative;
   z-index:1;
@@ -388,11 +375,9 @@ img {
 .loading-percent{
   font-size:72px;
   color:var(--primary-color-light);
+  margin-top:40px;
   font-weight:bold;
   position:relative;
-  flex-shrink:0;
-  min-width:200px;
-  text-align:left;
   z-index:1;
   text-shadow:0 0 10px rgba(var(--primary-color-rgb),0.5);
 }
@@ -425,7 +410,7 @@ img {
   position:relative;
   width:200px;
   height:200px;
-  flex-shrink:0;
+  margin-bottom:80px;
   z-index:2;
 }
 /* 环形背景 */
@@ -542,24 +527,20 @@ img {
     <div class="loading-corner loading-corner-bl"></div>
     <div class="loading-corner loading-corner-br"></div>
     <div class="loading-divider"></div>
+    <!-- 环形加载动画 -->
+    <div class="loading-spinner-container">
+      <div class="loading-spinner-bg"></div>
+      <div class="loading-spinner"></div>
+      <div class="loading-spinner-center"></div>
+    </div>
     <div class="loading-logo">神兵匣夺宝</div>
-    <div class="loading-stage-row">
-      <!-- 环形加载动画 -->
-      <div class="loading-spinner-container">
-        <div class="loading-spinner-bg"></div>
-        <div class="loading-spinner"></div>
-        <div class="loading-spinner-center"></div>
+    <div class="loading-stage" id="loadingStageText">正在初始化模拟器···</div>
+    <div class="loading-bar-container">
+      <div class="loading-bar-fill" id="loadingBarFill">
+        <div class="loading-bar-shine"></div>
       </div>
-      <div class="loading-stage" id="loadingStageText">正在初始化模拟器···</div>
     </div>
-    <div class="loading-bar-row">
-      <div class="loading-bar-container">
-        <div class="loading-bar-fill" id="loadingBarFill">
-          <div class="loading-bar-shine"></div>
-        </div>
-      </div>
-      <div class="loading-percent" id="loadingPercent">0%</div>
-    </div>
+    <div class="loading-percent" id="loadingPercent">0%</div>
     <div class="loading-tip">首次打开需要加载时间，请耐心等待</div>
   </div>
 </div>
@@ -1384,7 +1365,7 @@ function preloadKeyPages() {
     'pages/warehouse.html',
     'pages/exchange.html',
     'pages/buy_confirm.html',
-    'pages/bonus_tip.html',
+    'pages/bonus_tip.html?preload=1',
     'pages/confirm.html'
   ];
   // 方案A：预加载的iframe保留在DOM中，不移除

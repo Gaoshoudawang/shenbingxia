@@ -243,6 +243,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:-ap
 </div>
 
 <script>
+// ===== 预加载模式检查（最开头，彻底阻止自动抽奖） =====
+(function(){
+  try {
+    var urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('preload') === '1'){
+      console.log('[预加载模式] gacha_single 彻底阻止自动抽奖');
+      // 阻止window.onload执行
+      window.onload = null;
+      // 阻止所有setTimeout（自动抽奖的关键）
+      var originalSetTimeout = window.setTimeout;
+      window.setTimeout = function(fn, delay){
+        console.log('[预加载模式] 阻止setTimeout:', fn.toString().substring(0, 50));
+        return 0;
+      };
+      // 阻止所有setInterval
+      window.setInterval = function(){ return 0; };
+    }
+  } catch(e){}
+})();
 // ===== 预加载模式检查（全局变量） =====
 var isPreloadMode = false;
 try {

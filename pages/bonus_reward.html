@@ -263,6 +263,14 @@ window.addEventListener('message', function(e){
 
 // 页面加载完成后播放恭喜获得页面音效（和buy_success.html完全一样）
 window.onload = function(){
+  // 预加载模式检查
+  try {
+    var urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('preload') === '1'){
+      console.log('[预加载模式] bonus_reward 不执行自动逻辑');
+      return;
+    }
+  } catch(e){}
   // playRewardSound(); // 播放恭喜获得页面音效 // 已移到主页面播放，避免重音
 };
 </script>

@@ -53,6 +53,12 @@ img {
 </div>
 
 <script>
+// ===== 预加载模式检查 =====
+var isPreloadMode = false;
+try {
+  var urlParams = new URLSearchParams(window.location.search);
+  isPreloadMode = urlParams.get('preload') === '1';
+} catch(e){}
 // 自适应缩放
 function layout(){
   var s = Math.min(window.innerWidth/2340, window.innerHeight/1080);
@@ -73,8 +79,10 @@ function doConfirm(){
   parent.postMessage({type: 'bonusTipConfirm'}, '*');
 }
 
-// 页面加载后自动延迟1秒跳转
-setTimeout(doConfirm, 1000);
+// 页面加载后自动延迟1秒跳转（预加载模式下不执行）
+if(!isPreloadMode){
+  setTimeout(doConfirm, 1000);
+}
 
 // 确定按钮点击（用户可以点击快速跳转）
 document.getElementById('confirmBtn').addEventListener('click', doConfirm);
